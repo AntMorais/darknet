@@ -728,6 +728,7 @@ float *network_predict(network net, float *input)
     state.delta = 0;
     forward_network(net, state);
     float *out = get_network_output(net);
+    printf("\n\n\n\n\nola %f\n\n\n\n\n", out[0]);
     return out;
 }
 
