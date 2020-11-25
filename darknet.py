@@ -165,9 +165,9 @@ def remove_negatives(detections, class_names, num):
 
 """
 def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
-    """
-        Returns a list with highest confidence class and their bbox
-    """
+    
+    #    Returns a list with highest confidence class and their bbox
+    
     pnum = pointer(c_int(0))
     predict_image(network, image)
     detections = get_network_boxes(network, image.w, image.h,
