@@ -217,6 +217,7 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
                     predicted_bounding.append((name, detections[j].prob[idx], (bbox)))
                 predictions.append((predicted_bounding, max_number))
                 break
+            
     print("saiu daqui ")
     free_detections(detections, num)
 
