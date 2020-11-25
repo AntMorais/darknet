@@ -200,7 +200,7 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
     if nms:
         do_nms_sort(detections, num, len(class_names), nms)
 
-    print("entrou aqui ao menos")
+    print("entrou no detect_image, vai comecar predictions")
 
     # here we get an array with the predictions
     predictions = []
@@ -217,8 +217,8 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
                     predicted_bounding.append((name, detections[j].prob[idx], (bbox)))
                 predictions.append((predicted_bounding, max_number))
                 break
-            
-    print("saiu daqui ")
+
+    print("saiu das predictions ")
     free_detections(detections, num)
 
     
