@@ -176,9 +176,9 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
     
     print("Estou na função detect_image do darknet.py")
     for j in range(num):
-        print("detect->"+j)
+        print("detect->"+str(j))
         for idx, name in enumerate(class_names):
-            print("idx->"+idx+"//name->"+name+"//prob->"+detections[j].prob[idx])
+            print("idx->"+str(idx)+"//name->"+str(name)+"//prob->"+str(detections[j].prob[idx]))
         print("--------------------------------------------------------------------------------------------")
     print("\n\n\n\n\n\n")
     predictions = remove_negatives(detections, class_names, num)
