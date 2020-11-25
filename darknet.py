@@ -174,7 +174,7 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
         do_nms_sort(detections, num, len(class_names), nms)
     print("\n\n\n\n\n\n")
     print("Estou na função detect_image do darknet.py")
-    print(detections)
+    print(detections[0].prob)
     print("\n\n\n\n\n\n")
     predictions = remove_negatives(detections, class_names, num)
     predictions = decode_detection(predictions)
