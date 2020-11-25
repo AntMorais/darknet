@@ -159,6 +159,23 @@ def remove_negatives(detections, class_names, num):
                 bbox = (bbox.x, bbox.y, bbox.w, bbox.h)
                 predictions.append((name, detections[j].prob[idx], (bbox)))
     return predictions
+    
+
+def remove_negatives_lime(detections, class_names, num):
+    """
+    Remove all classes with 0% confidence within the detection
+    """
+    predictions = []
+    for j in range(num):
+        for idx, name in enumerate(class_names):
+            if detections[j].prob[idx] > 0:
+                # If the bounding box has at least one class prob > 0, then its put in the predictions array
+                bbox = detections[j].bbox
+                bbox = (bbox.x, bbox.y, bbox.w, bbox.h)
+                predictions.append((name, detections[j].prob[idx], (bbox)))
+    return predictions
+
+
 
 
 def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
@@ -173,21 +190,62 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
     if nms:
         do_nms_sort(detections, num, len(class_names), nms)
 
-    predictions = decode_detection(predictions)
-    print("\n\n\n\n\n\n")
     
-    print("Estou na função detect_image do darknet.py")
-    for j in range(num):
-        print("detect->"+str(j))
-        for idx, name in enumerate(class_names):
-            print("idx->"+str(idx)+"//name->"+str(name)+"//prob->"+str(detections[j].prob[idx]))
-        print("--------------------------------------------------------------------------------------------")
-    print("\n\n\n\n\n\n")
     predictions = remove_negatives(detections, class_names, num)
+    predictions = decode_detection(predictions)
     free_detections(detections, num)
     
     
     return sorted(predictions, key=lambda x: x[1])
+
+
+def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
+    """
+        Returns a list of predictions
+    """
+
+    num_classes = len(class_names)
+
+    pnum = pointer(c_int(0))
+    predict_image(network, image)
+    detections = get_network_boxes(network, image.w, image.h,
+                                   thresh, hier_thresh, None, 0, pnum, 0)
+    num = pnum[0]
+    if nms:
+        do_nms_sort(detections, num, len(class_names), nms)
+
+    # here we get an array with the predictions
+    predictions = []
+    for j in range(num):
+        for idx, name in enumerate(class_names):
+            if detections[j].prob[idx] > 0:
+                # If the bounding box has at least one class prob > 0, then it is put in the predictions array
+                bbox = detections[j].bbox
+                bbox = (bbox.x, bbox.y, bbox.w, bbox.h)
+                predicted_bounding = []
+                for idx, name in enumerate(class_names):
+                    max_number = max(detections[j].prob)
+                    confidence = round( detections[j].prob[idx] * 100, 2)
+                    predicted_bounding.append((name, detections[j].prob[idx], (bbox)))
+                predictions.append((predicted_bounding, max_number))
+                break
+    free_detections(detections, num)
+    
+    predict_sorted = sorted(predictions, key=lambda x: x[1])
+    predict_array = predict_sorted[0]
+
+    # here we sort the array by confidence value (x[1])
+    #return sorted(predictions, key=lambda x: x[1])
+    # what we want to do instead is return the whole list of predictions for the bounding box \
+    # that is most likely to be the main class (??)
+    return predict_array
+
+
+
+
+
+
+
 
 
 #  lib = CDLL("/home/pjreddie/documents/darknet/libdarknet.so", RTLD_GLOBAL)
