@@ -163,7 +163,7 @@ def remove_negatives(detections, class_names, num):
 
 
 
-
+"""
 def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
     """
         Returns a list with highest confidence class and their bbox
@@ -183,9 +183,9 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
     
     
     return sorted(predictions, key=lambda x: x[1])
+"""
 
-
-def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
+def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
     """
         Returns a list of predictions
     """
