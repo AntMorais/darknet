@@ -110,7 +110,6 @@ def image_detection(image_path, network, class_names, class_colors, thresh):
     image_resized = cv2.resize(image_rgb, (width, height),
                                interpolation=cv2.INTER_LINEAR)
     darknet.copy_image_from_bytes(darknet_image, image_resized.tobytes())
-    print("vai entrar no detect_image")
     detections = darknet.detect_image(network, class_names, darknet_image, thresh=thresh)
     darknet.free_image(darknet_image)
     image = darknet.draw_boxes(detections, image_resized, class_colors)
