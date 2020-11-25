@@ -177,8 +177,20 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
         do_nms_sort(detections, num, len(class_names), nms)
 
     
-    predictions = remove_negatives(detections, class_names, num)
-    predictions = decode_detection(predictions)
+    predictions = []
+    for j in range(num):
+        for idx, name in enumerate(class_names):
+            if detections[j].prob[idx] > 0:
+                bbox = detections[j].bbox
+                bbox = (bbox.x, bbox.y, bbox.w, bbox.h)
+                predictions.append((name, detections[j].prob[idx], (bbox)))
+    
+    decoded = []
+    for label, confidence, bbox in predictions:
+        confidence = str(round(confidence * 100, 2))
+        decoded.append((str(label), confidence, bbox))
+    predictions = decoded
+    
     free_detections(detections, num)
     
     
