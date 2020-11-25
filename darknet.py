@@ -190,21 +190,17 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
         Returns a list of predictions
     """
 
-    num_classes = len(class_names)
-    print("1")
     pnum = pointer(c_int(0))
     predict_image(network, image)
-    print("2")
     detections = get_network_boxes(network, image.w, image.h,
                                    thresh, hier_thresh, None, 0, pnum, 0)
-    print("3")
     num = pnum[0]
     if nms:
         do_nms_sort(detections, num, len(class_names), nms)
 
-    print("entrou no detect_image, vai comecar predictions")
 
     # here we get an array with the predictions
+    print("predict")
     predictions = []
     for j in range(num):
         for idx, name in enumerate(class_names):
