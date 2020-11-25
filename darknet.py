@@ -191,11 +191,13 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
     """
 
     num_classes = len(class_names)
-
+    print("1")
     pnum = pointer(c_int(0))
     predict_image(network, image)
+    print("2")
     detections = get_network_boxes(network, image.w, image.h,
                                    thresh, hier_thresh, None, 0, pnum, 0)
+    print("3")
     num = pnum[0]
     if nms:
         do_nms_sort(detections, num, len(class_names), nms)
