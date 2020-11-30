@@ -163,7 +163,6 @@ def remove_negatives(detections, class_names, num):
 
 
 
-
 def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
     
     # Returns a list with highest confidence class and their bbox
@@ -189,12 +188,44 @@ def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45
     for label, confidence, bbox in predictions:
         confidence = str(round(confidence * 100, 2))
         decoded.append((str(label), confidence, bbox))
-    predictions = decoded
     
     free_detections(detections, num)
     
+    return sorted(decoded, key=lambda x: x[1])
+
+
+
+
+def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
     
-    return sorted(predictions, key=lambda x: x[1])
+    # Returns a list with highest confidence class and their bbox
+    
+    pnum = pointer(c_int(0))
+    predict_image(network, image)
+    detections = get_network_boxes(network, image.w, image.h,
+                                   thresh, hier_thresh, None, 0, pnum, 0)
+    num = pnum[0]
+    if nms:
+        do_nms_sort(detections, num, len(class_names), nms)
+
+    
+    predictions = []
+    for j in range(num):
+        for idx, name in enumerate(class_names):
+            if detections[j].prob[idx] > 0:
+                bbox = detections[j].bbox
+                bbox = (bbox.x, bbox.y, bbox.w, bbox.h)
+                predictions.append((name, detections[j].prob[idx], (bbox)))
+    
+    decoded = []
+    for label, confidence, bbox in predictions:
+        confidence = str(round(confidence * 100, 2))
+        decoded.append((str(label), confidence, bbox))
+    
+    free_detections(detections, num)
+    
+    detection_prob_list = "oioioi"
+    return sorted(decoded, key=lambda x: x[1]), detection_prob_list
 
 
 """
