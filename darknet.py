@@ -216,6 +216,8 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
                 bbox = detections[j].bbox
                 bbox = (bbox.x, bbox.y, bbox.w, bbox.h)
                 predictions.append((name, detections[j].prob[idx], (bbox)))
+                
+    print(predictions)
     
     decoded = []
     for label, confidence, bbox in predictions:

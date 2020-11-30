@@ -111,7 +111,6 @@ def image_detection(image_path, network, class_names, class_colors, thresh):
                                interpolation=cv2.INTER_LINEAR)
     darknet.copy_image_from_bytes(darknet_image, image_resized.tobytes())
     detections, detection_prob_list = darknet.detect_image_lime(network, class_names, darknet_image, thresh=thresh)
-    print("\n\n\n"+str(detection_prob_list)+"\n\n\n")
     darknet.free_image(darknet_image)
     image = darknet.draw_boxes(detections, image_resized, class_colors)
     return cv2.cvtColor(image, cv2.COLOR_BGR2RGB), detections
