@@ -200,6 +200,7 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
     
     # Returns a list with highest confidence class and their bbox
     
+    # number of bboxes
     pnum = pointer(c_int(0))
     predict_image(network, image)
     detections = get_network_boxes(network, image.w, image.h,
@@ -208,15 +209,21 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
     if nms:
         do_nms_sort(detections, num, len(class_names), nms)
 
-    
+    import numpy
+    # list of probabilities with num of rows = num of detections and num of columns = num of classes
+    detection_prob_list = numpy.zeros((num, len(class_names)))
+
     predictions = []
+    # for every detected bbox
     for j in range(num):
+        # index and name of every class
         for idx, name in enumerate(class_names):
+            detection_prob_list[j][idx] = detections[j].prob[idx]
             if detections[j].prob[idx] > 0:
                 bbox = detections[j].bbox
                 bbox = (bbox.x, bbox.y, bbox.w, bbox.h)
                 predictions.append((name, detections[j].prob[idx], (bbox)))
-                
+
     print(predictions)
     
     decoded = []
@@ -226,7 +233,6 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
     
     free_detections(detections, num)
     
-    detection_prob_list = "oioioi"
     return sorted(decoded, key=lambda x: x[1]), detection_prob_list
 
 
