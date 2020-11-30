@@ -210,7 +210,7 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
         do_nms_sort(detections, num, len(class_names), nms)
 
     import numpy
-    numpy.set_printoptions(threshold=np.inf)
+    numpy.set_printoptions(threshold=numpy.inf)
     # list of probabilities with num of rows = num of detections and num of columns = num of classes
     detection_prob_list = numpy.zeros((num, len(class_names)))
 
