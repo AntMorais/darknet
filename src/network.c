@@ -914,6 +914,7 @@ void fill_network_boxes_batch(network *net, int w, int h, float thresh, float hi
 detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num, int letter)
 {
     detection *dets = make_network_boxes(net, thresh, num);
+    fill_network_boxes(net, w, h, thresh, hier, map, relative, dets, letter); 
     printf("\n entrou no get network boxes \n");
     int _i, _j;
     for (_i = 0; _i < num[0]; ++_i) {
@@ -922,7 +923,6 @@ detection *get_network_boxes(network *net, int w, int h, float thresh, float hie
         }
         printf("\n");
     }
-    fill_network_boxes(net, w, h, thresh, hier, map, relative, dets, letter);
     //imprimir todas as probabilidades das detecoes
     
     return dets;
