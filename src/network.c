@@ -914,6 +914,15 @@ void fill_network_boxes_batch(network *net, int w, int h, float thresh, float hi
 detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num, int letter)
 {
     detection *dets = make_network_boxes(net, thresh, num);
+    //imprimir todas as probabilidades das detecoes
+    int _i, _j;
+    for (_i = 0; _i < num[0]; ++_i) {
+        for (_j = 0; _j < dets->classes; ++_j) {
+            printf("%.2f  ", dets[_i].prob[_j]);
+        }
+        printf("\n");
+    }
+
     fill_network_boxes(net, w, h, thresh, hier, map, relative, dets, letter);
     return dets;
 }
