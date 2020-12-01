@@ -1673,6 +1673,8 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
 
         int nboxes = 0;
         detection *dets = get_network_boxes(&net, im.w, im.h, thresh, hier_thresh, 0, 1, &nboxes, letter_box);
+        
+        
         printf("\n\n\nprint de detecao ------------- num de classes %d\n\n\n", dets->classes);
         if (nms) {
             if (l.nms_kind == DEFAULT_NMS) do_nms_sort(dets, nboxes, l.classes, nms);
@@ -1680,6 +1682,20 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
         }
         draw_detections_v3(im, dets, nboxes, thresh, names, alphabet, l.classes, ext_output);
         save_image(im, "predictions");
+
+        //imprimir todas as probabilidades das detecoes
+        int _i, _j;
+        for (_i = 0; _i < nboxes; ++_i) {
+            for (_j = 0; _j < l.classes; ++_j) {
+                printf("%.2f  ", dets[_i].prob[_j]);
+            }
+            print("\n");
+        }
+
+
+
+
+
         if (!dont_show) {
             show_image(im, "predictions");
         }
