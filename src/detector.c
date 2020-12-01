@@ -1689,7 +1689,7 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
             for (_j = 0; _j < l.classes; ++_j) {
                 printf("%.2f  ", dets[_i].prob[_j]);
             }
-            print("\n");
+            printf("\n");
         }
 
 
