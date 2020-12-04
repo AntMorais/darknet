@@ -917,12 +917,14 @@ detection *get_network_boxes(network *net, int w, int h, float thresh, float hie
     fill_network_boxes(net, w, h, thresh, hier, map, relative, dets, letter); 
     printf("\n entrou no get network boxes \n");
     int _i, _j;
+    /*
     for (_i = 0; _i < num[0]; ++_i) {
         for (_j = 0; _j < dets->classes; ++_j) {
             printf("%.2f  ", dets[_i].prob[_j]);
         }
         printf("\n");
     }
+    */
     //imprimir todas as probabilidades das detecoes
     
     return dets;

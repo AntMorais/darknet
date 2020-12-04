@@ -295,7 +295,9 @@ void get_detection_detections(layer l, int w, int h, float thresh, detection *de
 		int col = i % l.side;
 		for (n = 0; n < l.n; ++n) {
 			int index = i*l.n + n;
+            // p_index?
 			int p_index = l.side*l.side*l.classes + i*l.n + n;
+            // scale?
 			float scale = predictions[p_index];
 			int box_index = l.side*l.side*(l.classes + l.n) + (i*l.n + n) * 4;
 			box b;
@@ -308,6 +310,7 @@ void get_detection_detections(layer l, int w, int h, float thresh, detection *de
 			for (j = 0; j < l.classes; ++j) {
 				int class_index = i*l.classes;
 				float prob = scale*predictions[class_index + j];
+                print(prob)
 				dets[index].prob[j] = (prob > thresh) ? prob : 0;
 			}
 		}
