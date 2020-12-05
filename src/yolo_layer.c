@@ -883,12 +883,18 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
                     get_embedding(l.embedding_output, l.w, l.h, l.n*l.embedding_size, l.embedding_size, col, row, n, 0, dets[count].embeddings);
                 }
 
+                // this will have the probabilities without threshold filtering
+                // TODO we will only save this array if we have a specific bounding box
+                float probability_array[l.classes]; 
+
                 for (j = 0; j < l.classes; ++j) {
                     int class_index = entry_index(l, 0, n*l.w*l.h + i, 4 + 1 + j);
                     float prob = objectness*predictions[class_index];
-                    printf("%f\t",predictions[class_index]);
+                    // return confidence ONLY for the bounding box we need
+                    probability_array[j] = prob;
                     dets[count].prob[j] = (prob > thresh) ? prob : 0;
                 }
+
                 printf("\n");
                 ++count;
             }
