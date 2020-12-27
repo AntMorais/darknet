@@ -2,7 +2,7 @@ GPU=0
 CUDNN=0
 CUDNN_HALF=0
 OPENCV=0
-AVX=0
+AVX=1
 OPENMP=0
 LIBSO=1
 ZED_CAMERA=0
@@ -15,7 +15,7 @@ ZED_CAMERA_v2_8=0
 # set ZED_CAMERA_v2_8=1 to enable ZED SDK 2.X
 
 USE_CPP=0
-DEBUG=0
+DEBUG=1
 
 ARCH= -gencode arch=compute_30,code=sm_30 \
       -gencode arch=compute_35,code=sm_35 \
