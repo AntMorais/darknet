@@ -3,10 +3,10 @@
  "frame_id":1, 
  "filename":"data/dog.jpg", 
  "objects": [ 
-  {"class_id":58, "name":"pottedplant", "relative_coordinates":{"center_x":0.910526, "center_y":0.228927, "width":0.047662, "height":0.079045}, "confidence":0.326696}, 
-  {"class_id":16, "name":"dog", "relative_coordinates":{"center_x":0.288844, "center_y":0.665889, "width":0.239682, "height":0.547047}, "confidence":0.957971}, 
-  {"class_id":7, "name":"truck", "relative_coordinates":{"center_x":0.747720, "center_y":0.213994, "width":0.287270, "height":0.161840}, "confidence":0.919836}, 
-  {"class_id":1, "name":"bicycle", "relative_coordinates":{"center_x":0.443592, "center_y":0.480910, "width":0.590126, "height":0.521988}, "confidence":0.916108}
+  {"class_id":58, "name":"pottedplant", "relative_coordinates":{"center_x":0.910615, "center_y":0.228851, "width":0.047547, "height":0.079290}, "confidence":0.325270}, 
+  {"class_id":16, "name":"dog", "relative_coordinates":{"center_x":0.287643, "center_y":0.665292, "width":0.239766, "height":0.549019}, "confidence":0.979146}, 
+  {"class_id":7, "name":"truck", "relative_coordinates":{"center_x":0.747740, "center_y":0.214015, "width":0.287359, "height":0.161784}, "confidence":0.922794}, 
+  {"class_id":1, "name":"bicycle", "relative_coordinates":{"center_x":0.447302, "center_y":0.480771, "width":0.596511, "height":0.518868}, "confidence":0.923118}
  ] 
 }
 ]

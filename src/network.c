@@ -39,6 +39,8 @@
 #include "upsample_layer.h"
 #include "parser.h"
 
+
+
 load_args get_base_args(network *net)
 {
     load_args args = { 0 };
@@ -854,13 +856,29 @@ void custom_get_region_detections(layer l, int w, int h, int net_w, int net_h, f
 }
 
 void fill_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, detection *dets, int letter)
-{
+{   
+    
+    FILE * fp;
+    float lime_coords[4];
+    int n, i;
+    fp = fopen("coordinates.txt", "r");
+    if (fp == NULL) {
+        printf("failed to open file\n");
+        return 1;
+    }
+    n = 0;
+    while (fscanf(fp, "%f\n", &lime_coords[n++]) != EOF);
+    
+    fclose(fp);
+
+
+
     int prev_classes = -1;
     int j;
     for (j = 0; j < net->n; ++j) {
         layer l = net->layers[j];
         if (l.type == YOLO) {
-            int count = get_yolo_detections(l, w, h, net->w, net->h, thresh, map, relative, dets, letter);
+            int count = get_yolo_detections(l, w, h, net->w, net->h, thresh, map, relative, dets, letter, lime_coords);
             dets += count;
             if (prev_classes < 0) prev_classes = l.classes;
             else if (prev_classes != l.classes) {
@@ -915,7 +933,7 @@ detection *get_network_boxes(network *net, int w, int h, float thresh, float hie
 {
     detection *dets = make_network_boxes(net, thresh, num);
     fill_network_boxes(net, w, h, thresh, hier, map, relative, dets, letter); 
-    printf("\n entrou no get network boxes \n");
+    //printf("\n entrou no get network boxes \n");
     int _i, _j;
     /*
     for (_i = 0; _i < num[0]; ++_i) {
@@ -925,7 +943,6 @@ detection *get_network_boxes(network *net, int w, int h, float thresh, float hie
         printf("\n");
     }
     */
-    //imprimir todas as probabilidades das detecoes
     
     return dets;
 }

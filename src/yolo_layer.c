@@ -857,8 +857,14 @@ void avg_flipped_yolo(layer l)
     }
 }
 
-int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, int relative, detection *dets, int letter)
-{
+int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, int relative, detection *dets, int letter, float *lime_coords)
+{       
+
+
+    int flag = 0;
+    float smallest_diff = INFINITY;
+    float probability_array[l.classes]; 
+    
     //printf("\n l.batch = %d, l.w = %d, l.h = %d, l.n = %d \n", l.batch, l.w, l.h, l.n);
     int i,j,n;
     float *predictions = l.output;
@@ -884,23 +890,59 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
                 }
 
                 // this will have the probabilities without threshold filtering
-                // TODO we will only save this array if we have a specific bounding box
-                float probability_array[l.classes]; 
+                // TODO this array has the probabilities for the chosen bounding box
+                
+                
+                // the smaller this value is, the closer the two bounding boxes are 
+                float diff = lime_coords[0]-dets[count].bbox.x+\
+                            lime_coords[1]-dets[count].bbox.y+\
+                            lime_coords[2]-dets[count].bbox.w+\
+                            lime_coords[3]-dets[count].bbox.h;
+
+                if(diff < smallest_diff){
+                    smallest_diff = diff;
+                    flag = 1;
+                }
+
+
+                //printf("\n\nPrinting the bounding box here\nx-->%f\ny-->%f\nw-->%f\nh-->%f\n",dets[count].bbox.x, dets[count].bbox.y,dets[count].bbox.w, dets[count].bbox.h);
 
                 for (j = 0; j < l.classes; ++j) {
                     int class_index = entry_index(l, 0, n*l.w*l.h + i, 4 + 1 + j);
+
+                    if(flag){
+                        //printf("%f\t",predictions[class_index]);
+                        probability_array[j] = predictions[class_index];
+                        }
+                    
                     float prob = objectness*predictions[class_index];
-                    printf("%f\t", prob);
-                    // return confidence ONLY for the bounding box we need
-                    probability_array[j] = prob;
                     dets[count].prob[j] = (prob > thresh) ? prob : 0;
                 }
+                //printf("\n");
 
-                printf("\n");
                 ++count;
+                
+
+                flag = 0;
             }
         }
     }
+
+    // here we write the probability array of the bbox that is closest to the one we want in a text file
+    FILE *filePtr;
+    filePtr = fopen("probabilityArray.txt","w");
+    
+    
+    for (i = 0; i < l.classes; i++) {
+        float num = probability_array[i];
+        //printf("%.8f\n", num);
+        fprintf(filePtr, "%.8f \n",i, num);
+    }
+
+    fclose(filePtr);
+
+    
+
     correct_yolo_boxes(dets, count, w, h, netw, neth, relative, letter);
     return count;
 }

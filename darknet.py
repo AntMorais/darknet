@@ -27,6 +27,13 @@ import random
 import os
 
 
+
+
+# Change here: if you run build.sh, libdarknetd.so, if you run make, libdarknet.so
+#libdarknet_file = "libdarknetd.so"
+libdarknet_file = "libdarknet.so"
+
+
 class BOX(Structure):
     _fields_ = [("x", c_float),
                 ("y", c_float),
@@ -335,7 +342,7 @@ if os.name == "nt":
 else:
     lib = CDLL(os.path.join(
         os.environ.get('DARKNET_PATH', './'),
-        "libdarknet.so"), RTLD_GLOBAL)
+        libdarknet_file), RTLD_GLOBAL)
 lib.network_width.argtypes = [c_void_p]
 lib.network_width.restype = c_int
 lib.network_height.argtypes = [c_void_p]
