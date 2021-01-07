@@ -895,10 +895,9 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
                 
                 // the smaller this value is, the closer the two bounding boxes are 
                 float diff = lime_coords[0]-dets[count].bbox.x+\
-                            lime_coords[1]-dets[count].bbox.y+\
+                            lime_coords[1]-dets[count].bbox.y/*+\
                             lime_coords[2]-dets[count].bbox.w+\
-                            lime_coords[3]-dets[count].bbox.h;
-
+                            lime_coords[3]-dets[count].bbox.h*/;
                 if(diff < smallest_diff){
                     smallest_diff = diff;
                     flag = 1;
