@@ -212,12 +212,6 @@ def detect_image_lime(network, class_names, image, thresh=.5, hier_thresh=.5, nm
     predict_image(network, image)
     detections = get_network_boxes(network, image.w, image.h,
                                    thresh, hier_thresh, None, 0, pnum, 0)
-    
-    print(str(detections[0].bbox.x) + "-------" + str(detections[0].bbox.y))
-
-    print(str(detections[1].bbox.x) + "-------" + str(detections[1].bbox.y))
-
-    print(str(detections[11].bbox.x) + "-------" + str(detections[11].bbox.y))
     num = pnum[0]
     
 
