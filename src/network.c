@@ -730,7 +730,6 @@ float *network_predict(network net, float *input)
     state.delta = 0;
     forward_network(net, state);
     float *out = get_network_output(net);
-    printf("\n\n\n\n\nola %f\n\n\n\n\n", out[0]);
     return out;
 }
 
@@ -864,7 +863,7 @@ void fill_network_boxes(network *net, int w, int h, float thresh, float hier, in
     fp = fopen("coordinates.txt", "r");
     if (fp == NULL) {
         printf("failed to open file\n");
-        return 1;
+        return;
     }
     n = 0;
     while (fscanf(fp, "%f\n", &lime_coords[n++]) != EOF);
@@ -892,6 +891,7 @@ void fill_network_boxes(network *net, int w, int h, float thresh, float hier, in
         }
         if (l.type == REGION) {
             custom_get_region_detections(l, w, h, net->w, net->h, thresh, map, hier, relative, dets, letter);
+            
             //get_region_detections(l, w, h, net->w, net->h, thresh, map, hier, relative, dets);
             dets += l.w*l.h*l.n;
         }
@@ -900,6 +900,9 @@ void fill_network_boxes(network *net, int w, int h, float thresh, float hier, in
             dets += l.w*l.h*l.n;
         }
     }
+
+    
+
 }
 
 void fill_network_boxes_batch(network *net, int w, int h, float thresh, float hier, int *map, int relative, detection *dets, int letter, int batch)
@@ -934,15 +937,14 @@ detection *get_network_boxes(network *net, int w, int h, float thresh, float hie
     detection *dets = make_network_boxes(net, thresh, num);
     fill_network_boxes(net, w, h, thresh, hier, map, relative, dets, letter); 
     //printf("\n entrou no get network boxes \n");
-    int _i, _j;
     /*
+    int _i, _j;
     for (_i = 0; _i < num[0]; ++_i) {
-        for (_j = 0; _j < dets->classes; ++_j) {
-            printf("%.2f  ", dets[_i].prob[_j]);
-        }
+        printf("%f---->%f", dets[_i].bbox.x, dets[_i].bbox.y);
         printf("\n");
     }
     */
+    
     
     return dets;
 }

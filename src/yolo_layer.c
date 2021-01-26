@@ -761,6 +761,7 @@ void correct_yolo_boxes(detection *dets, int n, int w, int h, int netw, int neth
         }
 
         dets[i].bbox = b;
+
     }
 }
 
@@ -860,7 +861,6 @@ void avg_flipped_yolo(layer l)
 int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, int relative, detection *dets, int letter, float *lime_coords)
 {       
 
-
     int flag = 0;
     float smallest_diff = INFINITY;
     float probability_array[l.classes]; 
@@ -875,6 +875,8 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
     for (i = 0; i < l.w*l.h; ++i){
         int row = i / l.w;
         int col = i % l.w;
+        
+
         for(n = 0; n < l.n; ++n){
             int obj_index  = entry_index(l, 0, n*l.w*l.h + i, 4);
             float objectness = predictions[obj_index];
@@ -883,6 +885,7 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
                 //printf("\n objectness = %f, thresh = %f, i = %d, n = %d \n", objectness, thresh, i, n);
                 int box_index = entry_index(l, 0, n*l.w*l.h + i, 0);
                 dets[count].bbox = get_yolo_box(predictions, l.biases, l.mask[n], box_index, col, row, l.w, l.h, netw, neth, l.w*l.h, l.new_coords);
+                
                 dets[count].objectness = objectness;
                 dets[count].classes = l.classes;
                 if (l.embedding_output) {
@@ -891,13 +894,20 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
 
                 // this will have the probabilities without threshold filtering
                 // TODO this array has the probabilities for the chosen bounding box
-                
+
+                // w and h are image width and height
+                // here we need to get the relative or absolute coordinates of the grid cell that this bounding box is in
+
+                box * bbox = &dets[count].bbox;
+                boxabs boxab = box_to_boxabs(bbox, w, h, 1);
+                float center_x = boxab.left + (boxab.right - boxab.left) / 2;
+                float center_y = boxab.top + (boxab.bot - boxab.top) / 2;
                 
                 // the smaller this value is, the closer the two bounding boxes are 
-                float diff = lime_coords[0]-dets[count].bbox.x+\
-                            lime_coords[1]-dets[count].bbox.y/*+\
-                            lime_coords[2]-dets[count].bbox.w+\
-                            lime_coords[3]-dets[count].bbox.h*/;
+                float diff = lime_coords[0]-center_x+\
+                            lime_coords[1]-center_y;
+
+                            
                 if(diff < smallest_diff){
                     smallest_diff = diff;
                     flag = 1;
@@ -939,8 +949,6 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
     }
 
     fclose(filePtr);
-
-    
 
     correct_yolo_boxes(dets, count, w, h, netw, neth, relative, letter);
     return count;

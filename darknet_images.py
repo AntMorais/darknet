@@ -104,7 +104,6 @@ def image_detection(image_path, network, class_names, class_colors, thresh):
     width = darknet.network_width(network)
     height = darknet.network_height(network)
     darknet_image = darknet.make_image(width, height, 3)
-
     image = cv2.imread(image_path)
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image_resized = cv2.resize(image_rgb, (width, height),
