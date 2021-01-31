@@ -903,9 +903,11 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
                 float center_x = boxab.left + (boxab.right - boxab.left) / 2;
                 float center_y = boxab.top + (boxab.bot - boxab.top) / 2;
                 
+                printf("%f----%f--------%f--%f\n",center_x,center_y, (lime_coords[0]*w), (lime_coords[1]*h));
+                
                 // the smaller this value is, the closer the two bounding boxes are 
-                float diff = lime_coords[0]-center_x+\
-                            lime_coords[1]-center_y;
+                float diff = lime_coords[0]*w-center_x+\
+                            lime_coords[1]*h-center_y;
 
                             
                 if(diff < smallest_diff){
