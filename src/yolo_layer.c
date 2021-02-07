@@ -903,7 +903,6 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
                 float center_x = boxab.left + (boxab.right - boxab.left) / 2;
                 float center_y = boxab.top + (boxab.bot - boxab.top) / 2;
                 
-                printf("%f----%f--------%f--%f\n",center_x,center_y, (lime_coords[0]*w), (lime_coords[1]*h));
                 
                 // the smaller this value is, the closer the two bounding boxes are 
                 float diff = lime_coords[0]*w-center_x+\
@@ -915,6 +914,7 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
                     flag = 1;
                 }
 
+                //printf("%f----%f--------%f--%f\n",center_x,center_y, (lime_coords[0]*w), (lime_coords[1]*h));
 
                 //printf("\n\nPrinting the bounding box here\nx-->%f\ny-->%f\nw-->%f\nh-->%f\n",dets[count].bbox.x, dets[count].bbox.y,dets[count].bbox.w, dets[count].bbox.h);
 
@@ -922,7 +922,6 @@ int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh,
                     int class_index = entry_index(l, 0, n*l.w*l.h + i, 4 + 1 + j);
 
                     if(flag){
-                        //printf("%f\t",predictions[class_index]);
                         probability_array[j] = predictions[class_index];
                         }
                     
